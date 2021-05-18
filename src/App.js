@@ -11,18 +11,34 @@ import {
   Route
 } from 'react-router-dom';
 
+import React, { useState, useEffect} from 'react';
+
 function App() {
-  return (
-    <Router>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/setting" component={Setting} />
-      <Route exact path="/friends" component={Friends} />
-      <Route exact path="/alarms" component={Alarms} />
-      <Route exact path="/register" component={Register} />
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/test" component={Test} />
-    </Router>
-  );
+  const [data, setData] = useState(0);
+
+  useEffect(() => {
+    fetch('/api').then(res => res.json()).then(data => {
+      setData(data["userName"]);
+    });
+  }, []);
+
+  return(
+    <div>
+      {data}
+    </div>
+  )
+
+  // return (
+  //   <Router>
+  //     <Route exact path="/" component={Home} />
+  //     <Route exact path="/setting" component={Setting} />
+  //     <Route exact path="/friends" component={Friends} />
+  //     <Route exact path="/alarms" component={Alarms} />
+  //     <Route exact path="/register" component={Register} />
+  //     <Route exact path="/login" component={Login} />
+  //     <Route exact path="/test" component={Test} />
+  //   </Router>
+  // );
 }
 
 export default App;
