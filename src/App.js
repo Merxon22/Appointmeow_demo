@@ -10,39 +10,19 @@ import {
   HashRouter as Router,
   Route
 } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(0);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    fetch('/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
-    });
-  }, []);
-
-  return(
-    <div>
-      <h1>Current time is {currentTime}.</h1>
-
-      <p>You clicked {count} times.</p>
-      <button onClick={() => setCount(count + 1)}>Click</button>
-    </div>
-  )
-
-  // return (
-  //   <Router>
-  //     <Route exact path="/" component={Home} />
-  //     <Route exact path="/setting" component={Setting} />
-  //     <Route exact path="/friends" component={Friends} />
-  //     <Route exact path="/alarms" component={Alarms} />
-  //     <Route exact path="/register" component={Register} />
-  //     <Route exact path="/login" component={Login} />
-  //     <Route exact path="/test" component={Test} />
-  //   </Router>
-  // );
+  return (
+    <Router>
+      <Route exact path="/" component={Home} />
+      <Route exact path="/setting" component={Setting} />
+      <Route exact path="/friends" component={Friends} />
+      <Route exact path="/alarms" component={Alarms} />
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/test" component={Test} />
+    </Router>
+  );
 }
 
 export default App;
