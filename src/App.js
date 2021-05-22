@@ -1,4 +1,5 @@
 import './App.css';
+import { Form } from "./form/form.js"
 import Home from './pages/Home.js';
 import Setting from './pages/Setting.js';
 import Friends from './pages/Friends.js';
@@ -12,9 +13,11 @@ import {
 } from 'react-router-dom';
 
 import React, { useState, useEffect} from 'react';
+import { message } from 'antd';
 
 function App() {
   const [data, setData] = useState(0);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     fetch('/api').then(res => res.json()).then(data => {
@@ -22,9 +25,27 @@ function App() {
     });
   }, []);
 
+  const handleFormChange =(inputValue)=> {
+    setUserName(inputValue)
+  }
+
+  const handleFormSubmit =()=> {
+    fetch('/api/createuser', {
+      method: 'POST',
+      body: JSON.stringify({
+        content: userName
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    }).then(response => response.json()).then(message => console.log(message))
+  }
+
   return(
     <div>
       {data}
+      <br/>
+      <Form userInput={userName} onFormChange={handleFormChange} onFormSubmit={handleFormSubmit}/>
     </div>
   )
 

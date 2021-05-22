@@ -55,6 +55,13 @@ def AllUsers():
     results = cursor.fetchall()
     return results
 
+def AllUserNames():
+    """Returns a list of user names"""
+    cmd = """SELECT userName FROM user"""
+    cursor.execute(cmd)
+    results = cursor.fetchall()
+    return results
+
 def RemoveUser(userName):
     cmd = """DELETE FROM user WHERE userName = %s"""
     cursor.execute(cmd, (userName,))
