@@ -21,10 +21,8 @@ const { TextArea } = Input
 class Alarms extends React.Component {
     constructor(props) {
         super(props);
-        const tempoID = this.getQuery(props.location.search);
         this.state = {
             collapsed: true,
-            tempoID: tempoID.lk,
             data: [{
                 disabled: true,
                 name: 'name',
@@ -41,16 +39,6 @@ class Alarms extends React.Component {
         }
     };
 
-    getQuery = str => {
-        return str
-            .replace('?', '')
-            .split('&')
-            .reduce((r, i) => {
-                const [key, value] = i.split('=');
-                return { ...r, [key]: value };
-            }, {});
-    }
-
     onCollapse = collapsed => {
         console.log(collapsed);
         this.setState({ collapsed })
@@ -59,16 +47,15 @@ class Alarms extends React.Component {
     handleClick = e => {
         console.log('click ', e);
         this.setState({ current: e.key });
-        const lk = this.state.tempoID;
         const key = e.key;
         if (key === "setting") {
-            this.props.history.push('/setting?lk='+lk)
+            this.props.history.push('/setting')
         } else if (key === "friends") {
-            this.props.history.push('/friends?lk='+lk)
+            this.props.history.push('/friends')
         } else if (key === "alarms") {
-            this.props.history.push('/alarms?lk='+lk)
+            this.props.history.push('/alarms')
         } else {
-            this.props.history.push('/home?lk='+lk)
+            this.props.history.push('/')
         };
     };
 
@@ -80,24 +67,12 @@ class Alarms extends React.Component {
         // this.setState({ current: e.itemID });
         // const {itemID} = e.itemID;
         //const disabled = data.map((key)=>key===1);
+        console.log(e)
         const data = [...this.state.data];
         this.setState({
             data: data.map((item,key)=>key === 0 ?{...item,disabled: !data.disabled}:item)
         });
     };
-
-    componentWillUnmount=()=>{
-        const tempoID=this.state.tempoID
-        fetch('logout/'+tempoID,{
-            method: 'POST',
-            body: JSON.stringify({
-                logOut: true
-            }),
-            headers:{
-                'Content-type':'application/json; charset=UTF-8'
-            }
-        })
-    }
 
     render() {
         const { collapsed } = this.state;

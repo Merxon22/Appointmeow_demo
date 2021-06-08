@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector.errors import IntegrityError
 
 db = mysql.connector.connect(host="freedb.tech", user="freedbtech_PeterYuan", passwd="81704002_oahnauY", database="freedbtech_Appointmeow")
 
@@ -7,46 +8,40 @@ cursor = db.cursor()
 createUserTable = """
     CREATE TABLE user(
         userID INT NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE,
-        userName VARCHAR(16) NOT NULL UNIQUE,
         email VARCHAR(80) NOT NULL UNIQUE,
         password VARCHAR(32) NOT NULL,
-        identity VARCHAR(16) NOT NULL,
-        grade INT,
-        class VARCHAR(16)
+        identity VARCHAR(16) NOT NULL
     )
 """
 
-def CreateUser(userName, email, password, identity, grade, homeroom):
-    cmd = """INSERT INTO user (userName, email, password, identity, grade, class) VALUES(%s, %s, %s, %s, %s, %s)"""
-    cursor.execute(cmd, (userName, email, password, identity, grade, homeroom))
-    db.commit()
-    print("Successfully created user '" + str(userName) + "' to 'user' table.")
-
-def UserName(email):
-    cmd = """SELECT userName FROM user WHERE email = %s"""
-    cursor.execute(cmd, (email, ))
-    result = cursor.fetchone()
-    print("Successfully fetched user '" + str(email) + "'s user name.")
-    return str(result[0])
+def CreateUser(email, password, identity):
+    cmd = """INSERT INTO user (email, password, identity) VALUES(%s, %s, %s)"""
+    try:
+        cursor.execute(cmd, (email, password, identity))
+        db.commit()
+    except IntegrityError:
+        print("User email already exists")
+        return "Email already exists"
+    else:
+        print("Successfully created user '" + email + "' in 'user' table.")
+        return True
 
 def UserPassword(email):
     cmd = """SELECT password FROM user WHERE email = %s"""
     cursor.execute(cmd, (email,))
-    result = cursor.fetchone()
-    print("Successfully fetched user '" + str(email) + "'s password.")
-    return str(result[0])    
+    result = cursor.fetchall()
+    if cursor.rowcount > 0:
+        print("Successfully fetched user '" + str(email) + "'s password.")
+        return str(result[0][0])
+    else:
+        print("User '" + email + "' does not exist.")
+        return ""
 
 def UpdatePassword(email, password):
     cmd = """UPDATE user SET password = %s WHERE email = %s"""
     cursor.execute(cmd, (password, email))
     db.commit()
     print("Successfully updated user '" + str(email) + "'s password.")
-
-def UpdateUserName(email, userName):
-    cmd = """UPDATE user SET userName = %s WHERE email = %s"""
-    cursor.execute(cmd, (userName, email))
-    db.commit()
-    print("Successfully set user '" + str(email) + "'s user name to '" + str(userName) + "'.")
 
 def AllUsers():
     """Returns a list of users"""
@@ -55,15 +50,42 @@ def AllUsers():
     results = cursor.fetchall()
     return results
 
-def AllUserNames():
-    """Returns a list of user names"""
-    cmd = """SELECT userName FROM user"""
-    cursor.execute(cmd)
-    results = cursor.fetchall()
-    return results
-
-def RemoveUser(userName):
-    cmd = """DELETE FROM user WHERE userName = %s"""
-    cursor.execute(cmd, (userName,))
+def RemoveUser(email):
+    cmd = """DELETE FROM user WHERE email = %s"""
+    cursor.execute(cmd, (email,))
     db.commit()
-    print("Successfully removed user '" +str(userName) + "' from table 'user'.")
+    print("Successfully removed user '" +str(email) + "' from table 'user'.")
+
+def UpdateLoginKey(key, email):
+    cmd = """UPDATE user SET loginKey = %s WHERE email = %s"""
+    cursor.execute(cmd, (key, email))
+    db.commit()
+    print("Successfully updated user '" + email + "'s login key to '" + key + "'")
+
+def EraseLoginKey(key):
+    cmd = """UPDATE user SET loginKey = '' WHERE loginKey = %s"""
+    cursor.execute(cmd, (key, ))
+    db.commit()
+    print("Successfully erased login key '" + key + "'")
+
+def EmailByKey(loginKey):
+    """Returns empty string if login key does not exist, return email if login key exists"""
+    cmd = """SELECT email FROM user WHERE loginKey = %s"""
+    cursor.execute(cmd, (loginKey, ))
+    result = cursor.fetchall()
+    if cursor.rowcount > 0:
+        email = result[0][0]
+        print("Successfully fethced user '" + email + "' with login key")
+        return email
+    else:
+        print("User with this login key does not exist")
+        return ""
+
+
+#======================Followins are command scripts===============================
+
+print("=================All existing users====================")
+results = AllUsers()
+for result in results:
+    print(result)
+print("=======================================================")

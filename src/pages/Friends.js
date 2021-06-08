@@ -1,73 +1,102 @@
 import React from "react";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import { Menu } from 'antd';
 import {
     DesktopOutlined,
     TeamOutlined,
     SettingOutlined,
     BellOutlined
-  } from '@ant-design/icons';
+} from '@ant-design/icons';
 
-const {Header, Content,Sider, Footer} = Layout;
-const {Item} = Menu;
+const { Header, Content, Sider, Footer } = Layout;
+const { Item } = Menu;
 // const { SubMenu } = Menu;
-  
+
 class Friends extends React.Component {
 
-    state = {
-      collapsed: true,
-      current: 'mail',
+    constructor(props) {
+        super(props);
+        const tempoID = this.getQuery(props.location.search)
+        this.state = {
+            collapsed: true,
+            current: 'mail',
+            tempoID: tempoID.lk
+        }
     };
-  
+
     onCollapse = collapsed => {
-      console.log(collapsed);
-      this.setState({ collapsed });
+        console.log(collapsed);
+        this.setState({ collapsed });
     };
+
+    getQuery = str => {
+        return str
+            .replace('?', '')
+            .split('&')
+            .reduce((r, i) => {
+                const [key, value] = i.split('=');
+                return { ...r, [key]: value };
+            }, {});
+    }
 
     handleClick = e => {
         console.log('click ', e);
         this.setState({ current: e.key });
+        const lk = this.state.tempoID;
         const key = e.key;
-        if(key === "setting"){
-            this.props.history.push('/setting')
-        }else if(key === "friends"){
-            this.props.history.push('/friends')
-        }else if(key === "alarms"){
-            this.props.history.push('/alarms')
-        }else{
-            this.props.history.push('/')
+        if (key === "setting") {
+            this.props.history.push('/setting'+lk)
+        } else if (key === "friends") {
+            this.props.history.push('/friends'+lk)
+        } else if (key === "alarms") {
+            this.props.history.push('/alarms'+lk)
+        } else {
+            this.props.history.push('/home'+lk)
         };
-      };    
+    };
 
-    render(){
-        const {collapsed} = this.state;
+    componentWillUnmount=()=>{
+        const tempoID=this.state.tempoID
+        fetch('logout/'+tempoID,{
+            method: 'POST',
+            body: JSON.stringify({
+                logOut: true
+            }),
+            headers:{
+                'Content-type':'application/json; charset=UTF-8'
+            }
+        })
+    }
+
+    render() {
+        const { collapsed } = this.state;
         const { current } = this.state;
-        return(
+        return (
             <Layout className="layout">
                 <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
                     <Menu theme="dark" defaultSelectedKeys={['home']} mode='inline' onClick={this.handleClick} selectedKeys={[current]}>
-                        <Item key = "home" icon={<DesktopOutlined />}>Home</Item>
-                        <Item key = "setting" icon={<SettingOutlined />}>Setting</Item>
-                        <Item key = "friends" icon={<TeamOutlined />}>Friends</Item>
-                        <Item key = "alarms" icon={<BellOutlined />}>Alarms</Item>
+                        <Item key="home" icon={<DesktopOutlined />}>Home</Item>
+                        <Item key="setting" icon={<SettingOutlined />}>Setting</Item>
+                        <Item key="friends" icon={<TeamOutlined />}>Friends</Item>
+                        <Item key="alarms" icon={<BellOutlined />}>Alarms</Item>
                     </Menu>
                 </Sider>
                 <Layout>
                     <Header className="site-layout-sub-header-background" style={{ padding: 0 }}>
                         AppointMeow
                     </Header>
-                    <Content style={{padding:'0 50px'}}>
-                    <Layout>
-                        <Content>
-                            This is friends page
+                    <Content style={{ padding: '0 50px' }}>
+                        <Layout>
+                            <Content>
+                                This is friends page
                         </Content>
-                    </Layout>
+                        </Layout>
                     </Content>
-                    <Footer style={{textAlign: "center"}}>AppointMeow 2021</Footer>  
+                    <Footer style={{ textAlign: "center" }}>AppointMeow 2021</Footer>
                 </Layout>
             </Layout>
-                
-        )     
+
+        )
     }
 }
 

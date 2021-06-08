@@ -41,21 +41,3 @@ body{
   border-radius: 2px;
   height: 645px;
 }
-
-.content-warp{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.display-detail-normal{
-  text-align: center;
-  width: 900px;
-  background-color: white;
-}
-
-.display-detail-small{
-  text-align: center;
-  width: 820px;
-  background-color: white;
-}
