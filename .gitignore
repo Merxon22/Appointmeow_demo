@@ -30,3 +30,4 @@ api/
 !api/flaskAPI/userDb.py
 !api/flaskAPI/eventDb.py
 !api/flaskAPI/appointmentDb.py
+!api/flaskAPI/requirements.txt
