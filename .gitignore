@@ -22,5 +22,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#flask venv
 __pycache__
-api/flaskAPI/pyvenv.cfg
+#api/flaskAPI/pyvenv.cfg
+api/
+!api/flaskAPI/app.py
+!api/flaskAPI/userDb.py
+!api/flaskAPI/eventDb.py
+!api/flaskAPI/appointmentDb.py
