@@ -31,3 +31,4 @@ api/flaskAPI/*
 !api/flaskAPI/eventDb.py
 !api/flaskAPI/appointmentDb.py
 !api/flaskAPI/requirements.txt
+!api/flaskAPI/.flaskenv
