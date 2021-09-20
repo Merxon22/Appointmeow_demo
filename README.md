@@ -14,7 +14,7 @@ Python == 3.9.5
 ### Step 2:
 1. Clone the github repository.
 
-   `git clone https://github.com/Merxon22/Appointmeow.git`
+   `git clone https://github.com/Merxon22/Appointmeow_demo.git`
 
 2. Enter the **./Appointmeow** directory, install required **node modules**:
 
