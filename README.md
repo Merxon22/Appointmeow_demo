@@ -16,16 +16,16 @@ Python == 3.9.5
 
    `git clone https://github.com/Merxon22/Appointmeow_demo.git`
 
-2. Enter the **./Appointmeow** directory, install required **node modules**:
+2. Enter the **./Appointmeow_demo** directory, install required **node modules**:
 
    `npm install`
    
-3. In the **Appointmeow** directory, install **pip packages**:
+3. In the **Appointmeow_demo** directory, install **pip packages**:
 
    `pip install -r requirements.txt`
 
 ### Step 3:
-1. Make sure you are in the **Appointmeow** directory.
+1. Make sure you are in the **Appointmeow_demo** directory.
 2. To start the **React App**, enter `yarn start` in terminal.
 3. To start the **Flask-API**, enter `yarn start-api` in terminal.
 
